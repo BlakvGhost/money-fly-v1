@@ -40,20 +40,20 @@ Avant de commencer, assurez-vous d'avoir les éléments suivants installés :
 1. Clonez le dépôt :
 
 ```sh
-git clone https://github.com/VotreNom/Banque-App.git
+git clone https://github.com/BlakvGhost/banque-app.git
 ```
 
 2. Installez les dépendances Python :
 
 ```sh
-cd Banque-App
+cd banque-app
 pip install -r requirements.txt
 ```
 
 4. Lancez l'application :
 
 ```sh
-python manage.py runserver
+py manage.py runserver
 ```
 
 ## Configuration
