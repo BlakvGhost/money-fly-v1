@@ -94,4 +94,3 @@ Les contributions à Banque-App sont les bienvenues ! Si vous souhaitez contribu
 ## Licence
 
 Ce projet est sous licence MIT. Voir le fichier [LICENSE](LICENSE) pour plus de détails.
-
