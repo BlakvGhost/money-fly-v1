@@ -1,0 +1,31 @@
+{% extends 'authentification/base.html' %}
+
+{% block 'title' %} Se Connecter {% endblock %}
+
+{% block 'main' %}
+
+<form class="w-100" method="post">
+    {% csrf_token %}
+    <div class="py-3">
+        <h1 class="h3 mb-3 fw-bold">Se Connecter</h1>
+    </div>
+    {% if error %}
+    <div class="alert alert-danger m-3" role="alert">
+        {{ error }}
+    </div>    
+    {% endif %}
+    <div class="form-floating my-3">
+        <input name="email" type="email" class="form-control" id="email_id" placeholder-alt="name@example.com">
+        <label for="email_id">Adresse email</label>
+    </div>
+    <div class="form-floating my-3">
+        <input name="password" type="password" class="form-control" id="password_id" placeholder-alt="*********">
+        <label for="password_id">Mot de Passe</label>
+    </div>
+    <button class="w-100 btn btn-lg btn-primary my-2" type="submit">Se connecter</button>
+    <div>
+        <a href="{% url 'register' %}" class="">Vous n'avez pas un compte?</a>
+    </div>
+    <p class="mt-2 text-muted">&copy; 2023–2023</p>
+</form>
+{% endblock %}

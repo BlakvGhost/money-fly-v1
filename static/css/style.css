@@ -1,0 +1,30 @@
+@import url('/static/vendor/Montserrat/Montserrat-VariableFont_wght.ttf');
+@import url('/static/vendor/Montserrat/Montserrat-Italic-VariableFont_wght.ttf');
+
+:root {
+    --app-primary-color: #2e4053;
+    --jma-primary-color: #2e4053
+}
+
+*:not(.fa, .fas, .fad) {
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+html,
+body {
+    overflow-x: hidden !important;
+}
+
+.text-app-secondary {
+    color: var(--app-primary-color) !important;
+}
+
+.bg-app-secondary {
+    background-color: var(--app-primary-color) !important;
+}
+
+.border-tb {
+    border-top-left-radius: 10px!important;
+    border-bottom-right-radius: 10px!important;
+    overflow: hidden!important;
+}

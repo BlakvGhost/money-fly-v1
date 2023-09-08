@@ -1,0 +1,235 @@
+<div id="modal-full">
+    <div class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" id="retrait_modal_id">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Effectuer un retrait de fonds</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="" method="POST" class="text-start">
+                        <div class="form-group my-2 text-start">
+                            <label for="accound_id" class="form-label form-text">Numéro de compte:</label>
+                            <input v-model="transaction.account_num" class="form-control" type="text" name="accound_id"
+                                id="account_id" placeholder="Ex: 123456780N">
+                        </div>
+                        <div class="form-group my-2">
+                            <label for="d_balance_id" class="form-label form-text">Montant en F CFA:</label>
+                            <input v-model="transaction.balance" class="form-control" type="number" name="balance"
+                                id="d_balance_id" placeholder="Ex: 5000">
+                        </div>
+                        <div class="form-group my-2">
+                            <label for="d_password" class="form-label form-text">Confirmer votre mot de passe:</label>
+                            <input v-model="transaction.user_password" class="form-control" type="password"
+                                name="password" id="d_password" placeholder="Ex: ***********">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button @click="receiveFrom" type="button" class="btn btn-primary"
+                        v-if="!checking">Effectuer</button>
+                    <button class="btn btn-primary" type="button" disabled v-if="checking">
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        Patientez...
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="depot_modal_id" class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Effectuer un Dépot de fonds vers</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="" method="POST" class="text-start">
+                        <div class="form-group my-2 text-start">
+                            <label for="accound_id" class="form-label form-text">Numéro de compte:</label>
+                            <input v-model="transaction.account_num" class="form-control" type="text" name="accound_id"
+                                id="account_id" placeholder="Ex: 123456780N">
+                        </div>
+                        <div class="form-group my-2">
+                            <label for="d_balance_id" class="form-label form-text">Montant en F CFA:</label>
+                            <input v-model="transaction.balance" class="form-control" type="number" name="balance"
+                                id="d_balance_id" placeholder="Ex: 5000">
+                        </div>
+                        <div class="form-group my-2">
+                            <label for="d_password" class="form-label form-text">Confirmer votre mot de passe:</label>
+                            <input v-model="transaction.user_password" class="form-control" type="password"
+                                name="password" id="d_password" placeholder="Ex: ***********">
+                        </div>
+                        <div class="form-group my-2">
+                            <label for="d_ref_id" class="form-label form-text">Réference:</label>
+                            <textarea v-model="transaction.ref" class="form-control" name="ref" id="d_ref_id" cols="30"
+                                rows="3" placeholder="Entrer la réference(facultatif)"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button @click="sendTo" type="button" class="btn btn-primary" v-if="!checking">Effectuer</button>
+                    <button class="btn btn-primary" type="button" disabled v-if="checking">
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        Patientez...
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="create_user_modal_id" class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Créer un compte admin</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="" method="POST" class="text-start">
+                        <div class="form-group my-2 text-start">
+                            <label for="first_name" class="form-label form-text">Prénom:</label>
+                            <input v-model="transaction.first_name" class="form-control" type="text" name="accound_id"
+                                id="first_name" placeholder="Ex: John">
+                        </div>
+                        <div class="form-group my-2">
+                            <label for="last_name" class="form-label form-text">NOM:</label>
+                            <input v-model="transaction.last_name" class="form-control" type="text" name="balance"
+                                id="last_name" placeholder="Ex: DOE">
+                        </div>
+                        <div class="form-group my-2">
+                            <label for="email" class="form-label form-text">Email:</label>
+                            <input v-model="transaction.email" class="form-control" type="text" name="balance"
+                                id="email" placeholder="Ex: johndoe23@exemple.com">
+                        </div>
+                        <div class="form-group my-2">
+                            <label for="d_password" class="form-label form-text">Mot de passe:</label>
+                            <input v-model="transaction.password" class="form-control" type="password"
+                                name="password" id="d_password" placeholder="Ex: ***********">
+                        </div>
+                        <div class="form-group my-2">
+                            <label for="d_password2" class="form-label form-text">Confirmer Mot de passe:</label>
+                            <input v-model="transaction.password2" class="form-control" type="password"
+                                name="password2" id="d_password" placeholder="Ex: ***********">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button @click="createUser" type="button" class="btn btn-primary" v-if="!checking">Effectuer</button>
+                    <button class="btn btn-primary" type="button" disabled v-if="checking">
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        Patientez...
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="historique_modal_id" class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" style="min-width: 75%;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Votre historique d'activité</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-start">
+                        <div class="d-flex justify-content-end my-2">
+                            <button @click="printModal" class="btn btn-secondary" title="Imprimer">
+                                <i class="mdi mdi-printer mdi-24px"></i>
+                            </button>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Operation</th>
+                                        <th scope="col">Depuis</th>
+                                        <th scope="col">Vers</th>
+                                        <th scope="col">Montant</th>
+                                        <th scope="col">Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="(t, k) in state?.operations">
+                                        <th scope="row"> [[ k + 1 ]] </th>
+                                        <td> [[ t.operation ]] </td>
+                                        <td> [[ t.user_from_str ]] </td>
+                                        <td> [[ t.user_to_str ]] </td>
+                                        <td>[[ t.balance ]]</td>
+                                        <td>[[ t.created_at ]]</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="confirmation_modal_id" class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Vos confirmations de transaction en attente</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-start">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Depuis</th>
+                                        <th scope="col">Montant</th>
+                                        <th scope="col">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <th scope="row">1</th>
+                                        <td>Mark</td>
+                                        <td>5000 F CFA</td>
+                                        <td>
+                                            <div class="d-flex justify-content-end">
+                                                <button class="btn btn-success me-2">
+                                                    <i class="mdi mdi-24 mdi-check-bold"></i>
+                                                </button>
+                                                <button class="btn btn-danger ms-2">
+                                                    <i class="mdi mdi-24 mdi-trash-can"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Quitter</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" id="send_modal_id">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <button class="btn btn-primary" type="button" disabled>
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        Loading...
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

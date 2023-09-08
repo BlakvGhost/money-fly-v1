@@ -1,0 +1,33 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block 'title' %} {% endblock %} - Banque</title>
+    <link rel="stylesheet" href="/static/vendor/bootstrap/bootstrap.min.css">
+    <script src="/static/vendor/bootstrap/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body class="bg-app-secondary">
+    <main class="">
+        <div class="form-signin text-center container" style="height: 100vh;">
+            <div class="position-relative h-100 w-100">
+                <div class="container">
+                    <div class="position-absolute w-100 row justify-content-center" style="top: 10%">
+                        <div class="col col-lg-6 col-12 card bg-light shadow p-3 rounded">
+                            {% block 'main' %}
+
+                            {% endblock %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+
+</html>

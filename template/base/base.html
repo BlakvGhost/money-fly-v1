@@ -1,0 +1,154 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block 'title' %} {% endblock %} - Banque</title>
+    <link rel="stylesheet" href="/static/vendor/bootstrap/bootstrap.min.css">
+    <script src="/static/vendor/bootstrap/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="/static/vendor/mdi/css/materialdesignicons.min.css">
+    <script src="/static/vendor/vue/vue.global.js"></script>
+    <script src="/static/vendor/jquery/jquery.js"></script>
+    <script src="/static/vendor/vue/axios.min.js"></script>
+    <script src="/static/vendor/toastr/toastr.min.js"></script>
+    <script src="/static/vendor/sweetalert/sweetalert2.min.js"></script>
+    <link rel="stylesheet" href="/static/vendor/sweetalert/sweetalert2.min.css">
+    <link rel="stylesheet" href="/static/vendor/toastr/toastr.min.css">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body class="bg-app-secondary">
+    <div id="app">
+        {% include 'base/header.html' %}
+        <main class="container-fluid">
+            <div class="form-signin text-center container" style="height: 100vh;">
+                <div class="position-relative h-100 w-100">
+                    <div class="container">
+                        <div class="position-absolute w-100 row justify-content-center" style="top: 10%">
+                            <div class="col col-lg-6 col-12 card bg-light shadow p-3 rounded">
+                                {% block 'main' %}
+
+                                {% endblock %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        {% include 'banque/operation_modals.html' %}
+    </div>
+</body>
+<script>
+    Vue.createApp({
+        delimiters: ['[[', ']]'],
+        data() {
+            return {
+                transaction: {},
+                oldOperaionId: null,
+                checking: 0,
+                error: null,
+                state: null,
+            }
+        },
+        methods: {
+            notif: function (type, title, msg) {
+                toastr.options = {
+                    "closeButton": false,
+                    "debug": false,
+                    "newestOnTop": false,
+                    "progressBar": true,
+                    "positionClass": "toast-top-right",
+                    "preventDuplicates": false,
+                    "onclick": null,
+                    "showDuration": "300",
+                    "hideDuration": "1000",
+                    "timeOut": "5000",
+                    "extendedTimeOut": "1000",
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut"
+                }
+                toastr[type](msg, title)
+            },
+            base: function (path, type) {
+                this.checking = 1;
+
+                axios.post(path, this.transaction).then(res => {
+                    this.notif('success', type, res.data.success)
+                    this.transaction = {}
+
+                    $('.modal').each((i, elt) => {
+                        $(elt).find('.btn-close').click();
+                    })
+
+                    return this.checking = false;
+                })
+                    .catch(err => {
+                        this.checking = 0;
+                        this.notif('error', type, err.response.data.error ?? null);
+                    })
+            },
+            sendTo: function () {
+                if (this.transaction.account_num && (this.transaction.balance > 0) && this.transaction.user_password) {
+                    return this.base("{% url 'depot' %}", "Dépot")
+                }
+                this.notif('error', "Dépot", "Veuillez remplir tout vos champs de saisir");
+            },
+            receiveFrom: function () {
+                if (this.transaction.account_num && (this.transaction.balance > 0) && this.transaction.user_password) {
+                    return this.base("{% url 'retrait' %}", "Rétrait")
+                }
+                this.notif('error', "Rétrait", "Veuillez remplir tout vos champs de saisir");
+            },
+            createUser: function () {
+                if (this.transaction.first_name && this.transaction.last_name
+                    && this.transaction.email && this.transaction.password
+                ) {
+                    return this.base("{% url 'createUser' %}", "Créer un compte admin")
+                }
+                this.notif('error', "Rétrait", "Veuillez remplir tout vos champs de saisir");
+            },
+            getState: function () {
+                axios.get("{% url 'getState' %}").then(res => {
+                    this.state = res.data;
+
+                    if (res.data.operation && (res.data.operation.id != this.oldOperaionId)) {
+                        Swal.fire({
+                            text: `${this.state?.operation?.user_from_str} essai de retirer ${this.state?.operation?.balance} F CFA de votre compte`,
+                            icon: "warning",
+                            showCancelButton: true,
+                            buttonsStyling: false,
+                            confirmButtonText: "Oui, Je confirme !",
+                            cancelButtonText: "No, Je refuse",
+                            customClass: {
+                                confirmButton: "btn btn-primary",
+                                cancelButton: "btn btn-active-light"
+                            }
+                        }).then((result) => {
+                            if (result.value) {
+                                this.transaction = res.data.operation
+                                return this.base("{% url 'confirm_retrait' %}", "Rétrait Confirmation")
+                            } else if (result.dismiss === 'cancel') {
+                                this.transaction = res.data.operation
+                                return this.base("{% url 'cancel_retrait' %}", "Rétrait Confirmation")
+                            }
+                        });
+                        this.oldOperaionId = res.data.operation.id;
+                    }
+                })
+            },
+            printModal: function (e) {
+                window.print();
+            },
+        },
+        mounted() {
+            setInterval(this.getState, 2000)
+        }
+    }).mount('#app')
+</script>
+
+</html>

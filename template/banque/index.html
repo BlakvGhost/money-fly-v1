@@ -1,0 +1,39 @@
+{% extends 'base/base.html' %}
+
+{% block 'title' %} Vos operations {% endblock %}
+
+{% block 'main' %}
+<div class="">
+    <div class="text-center my-2 p-3 border-bottom border-top">
+        <h3>Vos opérations</h3>
+    </div>
+    <ul class="list-group list-group-flush">
+        {% if user.is_superuser %}
+        <a data-bs-toggle="modal" data-bs-target="#create_user_modal_id"
+            class="list-group-item list-group-item-dark btn btn-dark border-tb my-1" href="javascript:void(0)">
+            Creer un compte admin
+        </a>
+        {% endif %}
+        {% if user.is_staff %}        
+        <a data-bs-toggle="modal" data-bs-target="#retrait_modal_id"
+            class="list-group-item list-group-item-dark btn btn-dark border-tb my-1" href="javascript:void(0)">
+            Retrait Depuis
+        </a>
+        <a data-bs-toggle="modal" data-bs-target="#depot_modal_id"
+            class="list-group-item list-group-item-dark btn btn-dark my-1 border-tb" href="javascript:void(0)">
+            Dépot Vers
+        </a>
+        {% else %}
+        <a data-bs-toggle="modal" data-bs-target="#depot_modal_id"
+            class="list-group-item list-group-item-dark btn btn-dark my-1 border-tb" href="javascript:void(0)">
+            Transferer vers un compte
+        </a>
+        {% endif %}  
+        <a data-bs-toggle="modal" data-bs-target="#historique_modal_id"
+            class="list-group-item list-group-item-dark btn btn-dark my-1 border-tb" href="javascript:void(0)">
+            Historique de vos transactions
+        </a>        
+    </ul>
+    <p class="mt-4 pt-1 text-muted mb-0 border-top">&copy; 2023–2023</p>
+</div>
+{% endblock %}
