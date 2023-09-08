@@ -95,6 +95,3 @@ Les contributions à Banque-App sont les bienvenues ! Si vous souhaitez contribu
 
 Ce projet est sous licence MIT. Voir le fichier [LICENSE](LICENSE) pour plus de détails.
 
----
-
-N'hésitez pas à personnaliser ce README en fonction des détails spécifiques de votre projet et à ajouter des captures d'écran, des exemples d'utilisation ou d'autres informations pertinentes pour rendre votre dépôt GitHub encore plus attractif.
