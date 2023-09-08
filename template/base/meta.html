@@ -31,4 +31,104 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon-16x16.png">
-    <link rel="manifest" href="/static/site.webmanifest">
+    <link rel="manifest" href="/static/manifest.json">
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register("/static/js/service-worker.js")
+                .then(function (registration) {
+                    console.log('Service Worker registered with scope:', registration.scope);
+                })
+                .catch(function (error) {
+                    console.error('Service Worker registration failed:', error);
+                });
+        }
+    
+        let deferredPrompt;
+        let installBar;
+    
+        window.addEventListener('beforeinstallprompt', (event) => {
+            event.preventDefault();
+            deferredPrompt = event;
+            showInstallPrompt();
+        });
+    
+        function showInstallPrompt() {
+            if (localStorage.getItem('installPromptRejected')) {
+                return;
+            }
+    
+            installBar = document.createElement('div');
+            installBar.classList.add('install-bar', 'position-fixed', 'bottom-0', 'w-100');
+            installBar.innerHTML = `
+                <div style="z-index:50000" class="bg-dark text-light text-center py-4 shadow position-fixed bottom-0 w-100">
+                    <div class="my-3">
+                        <h3 class="text-light my-3">Installez notre application pour profiter d'une meilleure expérience.</h3>
+                        <button class="btn btn-success install-button">Installer</button>
+                        <button class="btn btn-danger refuse-button">Refuser</button>    
+                    </div>    
+                </div>
+            `;
+            document.body.appendChild(installBar);
+    
+            const installButton = installBar.querySelector('.install-button');
+            installButton.addEventListener('click', () => {
+                installPWA();
+            });
+    
+            const refuseButton = installBar.querySelector('.refuse-button');
+            refuseButton.addEventListener('click', () => {
+                refuseInstall();
+            });
+        }
+    
+        function installPWA() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('L\'utilisateur a accepté l\'installation');
+                    } else {
+                        console.log('L\'utilisateur a refusé l\'installation');
+                        refuseInstall();
+                    }
+                    deferredPrompt = null;
+                });
+            }
+    
+            hideInstallPrompt();
+        }
+    
+        function refuseInstall() {
+            localStorage.setItem('installPromptRejected', true);
+            hideInstallPrompt();
+        }
+    
+        function hideInstallPrompt() {
+            if (installBar) {
+                installBar.remove();
+                installBar = null;
+            }
+        }
+    
+    </script>
+    <style>
+        .install-bar {
+            animation-name: slideInDown;
+            animation-duration: 0.5s;
+            animation-timing-function: ease-out;
+            animation-fill-mode: forwards;
+        }
+    
+        @keyframes slideInDown {
+            0% {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+    
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+    </style>
