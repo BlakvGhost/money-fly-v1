@@ -14,6 +14,11 @@
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="javascript:void(0)">Home</a>
                     </li>
+                    {% if user.is_superuser %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin">Admin</a>
+                    </li>
+                    {% endif %}
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="javascript:void(0)" id="navbarDropdown" role="button"
                             data-bs-toggle="dropdown" aria-expanded="false">
