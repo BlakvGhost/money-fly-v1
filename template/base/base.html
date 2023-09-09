@@ -10,11 +10,6 @@
     <title>{% block 'title' %} {% endblock %} - Banque-App - Votre Solution de Gestion de Banque en Ligne</title>
     <script src="https://unpkg.com/@futuravision/futura.js/dist/futurajs.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" integrity="sha512-c42qTSw/wPZ3/5LBzD+Bw5f7bSF2oxou6wEb+I/lqeaKV5FDIfMvvRp772y4jcJLKuGUOpbJMdg/BTl50fJYAw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <script type="text/javascript" async>
-        new fJs.Sticky({
-            elt: '#staticHeader',
-        });
-    </script>
 </head>
 
 <body class="bg-app-secondary">
@@ -143,7 +138,10 @@
             },
         },
         mounted() {
-            setInterval(this.getState, 2000)
+            setInterval(this.getState, 2000);
+            new fJs.Sticky({
+                elt: '#staticHeader',
+            });
         }
     }).mount('#app')
 </script>
